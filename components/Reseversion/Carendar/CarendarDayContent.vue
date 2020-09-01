@@ -1,3 +1,4 @@
+```
 <template>
   <div class="d-flex carendar-box">
     <div class="calender-first-col">
@@ -12,23 +13,26 @@
       <!-- time col -->
       <CalendarTimeCol :times="times" :timedisplay="true" />
     </div>
-    <div
-      v-for="(headerItemList, headerIndex) in headerItemLists"
-      :key="headerIndex"
-      class="calender-col"
-    >
-      <div class="pa-2 carendar-first-row d-flex align-center">
-        {{ headerItemList.title }}
+    <div class="d-flex">
+      <!-- ReservationBox -->
+      <ReservationBox :times="times" :business="Business" />
+      <div
+        v-for="(headerItemList, headerIndex) in headerItemLists"
+        :key="headerIndex"
+        class="calender-col"
+      >
+        <div class="pa-2 carendar-first-row d-flex align-center">
+          {{ headerItemList.title }}
+        </div>
+        <div class="pa-2 carendar-second-row d-flex align-center">
+          <p class="ma-0 second-row-text">ユニット表示</p>
+          <v-btn class="second-row-btn" fab>
+            <v-icon color="#c3c3c3">mdi-chevron-right</v-icon>
+          </v-btn>
+        </div>
+        <!-- time col -->
+        <CalendarTimeCol :times="times" />
       </div>
-      <div class="pa-2 carendar-second-row d-flex align-center">
-        <p class="ma-0 second-row-text">ユニット表示</p>
-        <v-btn class="second-row-btn" fab>
-          <v-icon color="#c3c3c3">mdi-chevron-right</v-icon>
-        </v-btn>
-      </div>
-
-      <!-- time col -->
-      <CalendarTimeCol :times="times" />
     </div>
     <!-- last col -->
     <div class="calender-last-col" :style="lastColWidth">
@@ -39,43 +43,15 @@
     </div>
   </div>
 </template>
-
 <script>
 export default {
   data: () => ({
     dorpdownList: ['All', 'test1', 'test2'],
-    times: [
-      {
-        text: '09:00',
-      },
-      {
-        text: '10:00',
-      },
-      {
-        text: '11:00',
-      },
-      {
-        text: '12:00',
-      },
-      {
-        text: '13:00',
-      },
-      {
-        text: '14:00',
-      },
-      {
-        text: '15:00',
-      },
-      {
-        text: '16:00',
-      },
-      {
-        text: '17:00',
-      },
-      {
-        text: '1:00',
-      },
-    ],
+    Business: {
+      openDate: new Date(2020, 8, 31, 7, 50),
+      closeDate: new Date(2020, 8, 31, 17, 0),
+    },
+    times: [],
     headerItemLists: [
       {
         title: 'ユーザー1',
@@ -88,6 +64,9 @@ export default {
       },
       {
         title: 'ユーザー４',
+      },
+      {
+        title: 'ユーザー5',
       },
     ],
   }),
@@ -104,9 +83,35 @@ export default {
       }
     },
   },
+  created() {
+    this.setTimes()
+  },
+  methods: {
+    calcBusinessTime(startDate, endDate) {
+      const difftime = endDate.getTime() - startDate.getTime()
+      const diffHour = Math.floor(difftime / (1000 * 60 * 60))
+      return diffHour
+    },
+    test() {
+      this.setTimes(this.Business.openDate, this.Business.closeDate)
+    },
+    setTimes() {
+      this.times = []
+      const businesstTime = this.calcBusinessTime(
+        this.Business.openDate,
+        this.Business.closeDate
+      )
+      const startHour = this.Business.openDate.getHours()
+      for (let i = 0; i <= businesstTime; i++) {
+        this.times.push({
+          text: startHour + i + ':00',
+        })
+      }
+      console.log(this.times)
+    },
+  },
 }
 </script>
-
 <style lang="scss">
 .carendar-box {
   overflow: auto;
@@ -114,7 +119,6 @@ export default {
 .first-content {
   width: 200px;
 }
-
 .calender-first-col {
   width: 200px;
   min-width: 200px;
@@ -125,7 +129,6 @@ export default {
   width: 100px;
   border-right: 1px solid #c3c3c3;
 }
-
 .calender-time-table {
   height: 20px;
   border-bottom: 1px dotted #e2e2e2;

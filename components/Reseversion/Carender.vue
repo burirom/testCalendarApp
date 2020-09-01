@@ -6,7 +6,6 @@
         @sendRaiosData="setRaiosData"
         @sendCarendarList="setCarendarActiveList"
       />
-      <ReservationBox />
       <CarendarDayContent />
       <!-- <CarendarWeekContent /> -->
     </v-card>

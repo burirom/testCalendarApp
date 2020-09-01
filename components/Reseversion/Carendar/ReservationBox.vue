@@ -1,54 +1,91 @@
 <template>
-  <div>
-    <v-btn @click="setIntDiffMinute()">テストボタン</v-btn>
+  <div class="reservation-box">
     <div
-      :style="boxHeight"
-      class="reservation-box"
-      :class="nomination ? 'nomination-box' : 'no-nomination-box'"
-    ></div>
+      :style="boxStyles"
+      class="reservation-content"
+      :class="customerInfo.nomination ? 'nomination-box' : 'no-nomination-box'"
+    >
+      <p>{{ customerInfo.name }}</p>
+      <p v-if="customerInfo.customerNumberOfPeople != 0">
+        他{{ customerInfo.customerNumberOfPeople }}名
+      </p>
+      <p>{{ reseversionTimeText }}</p>
+    </div>
   </div>
 </template>
-
 <script>
 export default {
+  props: {
+    rowWidth: {
+      type: Number,
+      default: 100,
+    },
+    boxPlaceX: {
+      type: Number,
+      default: 0,
+    },
+    business: {
+      default: null,
+    },
+  },
   data() {
     return {
-      title: 'ミーティング',
-      start: new Date(),
-      end: null,
-      extendedProps: {
-        department: '総務部',
+      customerInfo: {
+        start: new Date(2020, 8, 31, 10, 0),
+        end: new Date(2020, 8, 31, 13, 0),
+        name: '野村',
+        customerNumberOfPeople: 0,
+        nomination: false,
       },
-      description: '総務部とのミーティング',
-      intDiffMinute: 0,
-      nomination: false,
     }
   },
   computed: {
-    boxHeight() {
+    boxStyles() {
       return {
         '---height': this.calcBoxheight(this.intDiffMinute) + 'px',
+        '---boxPlaceX': this.calcBoxPlaceX() + 'px',
+        '---boxPlaceY': this.calcBoxPlaceY() + 'px',
       }
+    },
+    boxPlace() {
+      return {
+        '---boxPlaceHeight': this.calcBoxPlace() + 'px',
+      }
+    },
+    reseversionTimeText() {
+      const startMinutes = this.customerInfo.start.getMinutes()
+      const endMinutes = this.customerInfo.end.getMinutes()
+      const startHours = this.customerInfo.start.getHours()
+      const endHours = this.customerInfo.end.getHours()
+      if (startMinutes === 0 || endMinutes === 0)
+        return (
+          startHours +
+          ':' +
+          startMinutes +
+          '0' +
+          '~' +
+          endHours +
+          ':' +
+          endMinutes +
+          '0'
+        )
+      return startHours + ':' + startMinutes + '~' + endHours + ':' + endMinutes
     },
   },
   created() {
-    const date = new Date(
-      this.start.getFullYear(),
-      this.start.getMonth(),
-      this.start.getDate(),
-      this.start.getHours(),
-      this.start.getMinutes() + 90
-    )
-    this.end = date
+    this.setIntDiffMinute()
   },
   methods: {
     setIntDiffMinute() {
-      this.intDiffMinute = this.calcDiffTime()
+      this.intDiffMinute = this.calcDiffTime(
+        this.customerInfo.start,
+        this.customerInfo.end
+      )
     },
     // 時間の差分の計算(分)
-    calcDiffTime() {
-      const diff = this.start.getTime() - this.end.getTime()
-      const diffMinute = Math.abs(diff) / (60 * 1000)
+    calcDiffTime(startTime, endTime) {
+      const diff = startTime.getTime() - endTime.getTime() + 30
+      const diffMinute = Math.abs(diff) / (60 * 1000) + startTime.getMinutes()
       return Math.round(diffMinute)
     },
     // 差分の時間いよるboxの高さの計算
@@ -56,14 +93,30 @@ export default {
       const Boxheight = Math.round(diiftime / 10) * 20
       return Boxheight
     },
+    calcBoxPlaceX() {
+      return this.boxPlaceX * this.rowWidth
+    },
+    calcBoxPlaceY() {
+      const boxPlace = this.calcDiffTime(
+        this.business.openDate,
+        this.customerInfo.start
+      )
+      return Math.round(boxPlace / 10) * 20 + 107
+    },
   },
 }
 </script>
-
 <style lang="scss" scoped>
 .reservation-box {
+  position: absolute;
   width: 100px;
+  padding: 2px;
+}
+.reservation-content {
+  position: relative;
   height: var(---height);
+  left: var(---boxPlaceX);
+  top: var(---boxPlaceY);
 }
 .nomination-box {
   background: #6e9eff;

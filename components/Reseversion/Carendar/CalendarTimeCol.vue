@@ -69,9 +69,10 @@ export default {
   },
   computed: {
     numCol() {
+      const width = this.colwidth / this.personcharges.length
+      console.log('幅', width)
       return {
-        '---width':
-          'calc(' + this.colwidth + 'px / ' + this.personcharges.length + ')',
+        '---width': width + 'px',
       }
     },
     isPersoncharges() {

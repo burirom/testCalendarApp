@@ -1,46 +1,89 @@
 <template>
   <div>
+    <!-- <div v-if="!radios" class="d-flex carendar-box">
+      <div class="calender-first-col">
+        <div class="carendar-first-row d-flex align-center pa-2">
+          <v-select :items="dorpdownList" label="Standard" dense></v-select>
+          <v-btn icon disabled>
+            <v-icon>mdi-cached</v-icon>
+          </v-btn>
+        </div>
+        <div class="carendar-second-row no-item"></div>
+        <CalendarTimeCol :times="times" :timedisplay="true" />
+      </div>
+      <div class="d-flex">
+        <div
+          v-for="(customerList, index) in customerLists"
+          :key="`first-${index}`"
+        >
+          <ReservationBox
+            v-if="DateComparison(dateItem, customerList.start)"
+            :times="times"
+            :business="Business"
+            :customerinfo="customerList"
+            :box-place-x="
+              calcReservationBoxPlaceX(
+                customerList.PersonInChargeId,
+                PersonInChargeLists
+              )
+            "
+          />
+        </div>
+        <div
+          v-for="(PersonInChargeList, index) in PersonInChargeLists"
+          :key="`second-${index}`"
+          class="calender-col"
+        >
+          <div class="pa-2 carendar-first-row d-flex align-center">
+            {{ PersonInChargeList.PersonInCharge }}
+          </div>
+          <div class="pa-2 carendar-second-row d-flex align-center">
+            <p class="ma-0 second-row-text">ユニット表示</p>
+            <v-btn class="second-row-btn" fab>
+              <v-icon color="#c3c3c3">mdi-chevron-right</v-icon>
+            </v-btn>
+          </div>
+          <CalendarTimeCol :times="times" />
+        </div>
+      </div>
+      <div class="calender-last-col" :style="lastColWidth">
+        <div class="pa-2 carendar-first-row"></div>
+        <div class="pa-2 carendar-second-row no-item"></div>
+        <CalendarTimeCol :times="times" />
+      </div>
+    </div> -->
     <CalendarCommon
       v-if="!radios"
-      :top-row-contents="PersonInChargeLists"
+      :top-row-contents="personInChargeLists"
       :times-text="times"
     >
-      <template #secondRow>
-        <div
-          v-for="(unitLists, unitListIndex) in unitLists"
-          :key="unitListIndex"
-          class="carendar-second-row-subcontent d-flex align-center justify-center"
-          :style="numCol"
-        >
-          <div>
-            {{ unitLists.unitName.substring(0, 1) }}
-          </div>
-        </div>
+      <template #secondrow>
+        <p class="ma-0 second-row-text">ユニット表示</p>
       </template>
       <template #timeCol>
-        <CalendarTimeCol :personcharges="PersonInChargeLists" :times="times" />
+        <CalendarTimeCol :times="times" />
       </template>
     </CalendarCommon>
     <CalendarCommon
       v-else-if="radios"
       :top-row-contents="unitLists"
       :times-text="times"
+      :col-width="150"
     >
-      <template #secondRow>
+      <template #secondrow>
         <div
-          v-for="(PersonInChargeList,
-          PersonInChargeIndex) in PersonInChargeLists"
-          :key="PersonInChargeIndex"
+          v-for="(personInChargeList,
+          personInChargeIndex) in personInChargeLists"
+          :key="personInChargeIndex"
           class="carendar-second-row-subcontent d-flex align-center justify-center"
-          :style="numCol"
         >
           <div>
-            {{ PersonInChargeList.PersonInCharge.substring(0, 1) }}
+            {{ personInChargeList.personInCharge.substring(0, 1) }}
           </div>
         </div>
       </template>
       <template #timeCol>
-        <CalendarTimeCol :personcharges="PersonInChargeLists" :times="times" />
+        <CalendarTimeCol :times="times" />
       </template>
     </CalendarCommon>
   </div>
@@ -63,26 +106,26 @@ export default {
       closeDate: new Date('2020/9/2/17:0'),
     },
     times: [],
-    PersonInChargeLists: [
+    personInChargeLists: [
       {
         id: 1,
-        PersonInCharge: '担当者1',
+        personInCharge: '担当者1',
       },
       {
         id: 2,
-        PersonInCharge: '担当者2',
+        personInCharge: '担当者2',
       },
       {
         id: 3,
-        PersonInCharge: '担当者３',
+        personInCharge: '担当者３',
       },
       {
         id: 4,
-        PersonInCharge: '担当者４',
+        personInCharge: '担当者４',
       },
       {
         id: 5,
-        PersonInCharge: '担当者5',
+        personInCharge: '担当者5',
       },
     ],
     unitLists: [
@@ -184,7 +227,7 @@ export default {
   },
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .carendar-box {
   overflow: auto;
 }
@@ -209,7 +252,19 @@ export default {
 .calender-last-col {
   width: var(---width);
 }
-
+.carendar-first-row {
+  height: 62px;
+  border-bottom: 1px solid #c3c3c3;
+  background: #f5f6f8;
+  &:first-child {
+    border-top: 1px solid #c3c3c3;
+  }
+}
+.second-row-text {
+  font-size: 11px;
+  color: #a0a0a0;
+  text-align: center;
+}
 .carendar-second-row {
   height: 45px;
   border-bottom: 1px solid #c3c3c3;
@@ -217,11 +272,7 @@ export default {
   &:first-child {
     border-top: 1px solid #c3c3c3;
   }
-  .second-row-text {
-    font-size: 11px;
-    color: #a0a0a0;
-    text-align: center;
-  }
+
   .second-row-btn {
     box-shadow: none !important;
     width: 22px !important;

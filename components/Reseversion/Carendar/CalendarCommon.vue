@@ -1,31 +1,42 @@
 <template>
   <div class="carendar-box">
-    <div class="calender-header d-flex">
+    <div class="d-flex second-row-box">
       <div
-        class="carendar-first-row d-flex align-center pa-20 calender-first-col first-content justify-center"
+        class="carendar-first-row calender-header d-flex align-center pa-20 calender-first-col first-content justify-center"
       >
         <slot name="firstitem"></slot>
       </div>
       <div
-        v-for="n of colNum"
-        :key="n"
-        class="carendar-first-row d-flex align-center pa-20 calender-col justify-center col-width"
+        v-for="(topRowContent, firstIndex) of topRowContents"
+        :key="firstIndex"
+        class="calender-header carendar-first-row d-flex align-center pa-20 calender-col justify-center col-width"
         :style="numWidth"
       >
-        <slot name="firstrow"></slot>
+        <div v-if="topRowContent.personInCharge">
+          {{ topRowContent.personInCharge }}
+        </div>
+        <div v-if="topRowContent.unitName">
+          {{ topRowContent.unitName }}
+        </div>
       </div>
     </div>
-    <div class="calender-header d-flex">
+    <div class="d-flex">
       <div
-        class="d-flex align-center calender-header-content pa-20 justify-center first-content border-right"
+        class="d-flex calender-header align-center calender-header-content pa-20 justify-center first-content border-right"
       ></div>
       <div
-        v-for="n of colNum"
+        v-for="n of numCol"
         :key="n"
-        class="d-flex align-center pa-20 calender-col justify-center col-width"
         :style="numWidth"
+        class="second-row-position calender-header"
       >
-        <slot name="secondrow"></slot>
+        <div
+          class="d-flex align-center pa-20 calender-col justify-center col-width second-row-box"
+          style="height: 100%"
+        >
+          <slot name="secondrow"></slot>
+        </div>
+        <slot name="secondrowbtn"></slot>
       </div>
     </div>
     <!-- CarendarHeader -->
@@ -34,15 +45,18 @@
         <slot name="firstColContent"></slot>
         <CalendarTimeCol :times="timesText" :timedisplay="true" />
       </div>
-      <div
-        v-for="n of colNum"
-        :key="n"
-        class="border-right col-width d-flex"
-        :style="numWidth"
-      >
-        <slot name="timeCol"></slot>
-        <CalendarTimeCol :times="timesText" />
+      <div class="d-flex second-row-position">
+        <slot name="reservationBox" />
+        <div
+          v-for="n of numCol"
+          :key="n"
+          class="d-flex border-right col-width"
+          :style="numWidth"
+        >
+          <slot name="timeCol"></slot>
+        </div>
       </div>
+
       <div class="calender-last-col" :style="lastColWidth">
         <CalendarTimeCol :times="timesText" />
       </div>
@@ -62,11 +76,12 @@ export default {
       default: null,
     },
     timesText: {
+      type: Array,
       default: null,
     },
-    colNum: {
-      type: Number,
-      default: 6,
+    firstRowLists: {
+      type: Array,
+      default: null,
     },
     colWidth: {
       type: Number,
@@ -80,13 +95,12 @@ export default {
     lastColWidth() {
       return {
         '---width':
-          'calc(100% - ' + this.colNum * this.colWidth + 'px + ' + 200 + 'px)',
+          'calc(100% - ' + this.numCol * this.colWidth + 'px + ' + 200 + 'px)',
       }
     },
     numCol() {
-      return {
-        '---numcolwidth': 150 / this.secondRowContents.length + 'px',
-      }
+      if (this.topRowContents) return this.topRowContents.length
+      return 0
     },
     numWidth() {
       return {
@@ -107,7 +121,9 @@ export default {
 .calender-header-content {
   height: 43px;
 }
-
+.second-row-box {
+  background: #f5f6f8;
+}
 .first-content {
   width: 200px;
   min-width: 200px;
@@ -127,9 +143,6 @@ export default {
 
 .border-right {
   border-right: 1px solid #c3c3c3;
-  &:last-child {
-    border-right: none;
-  }
 }
 
 .carendar-second-row {
@@ -167,6 +180,21 @@ export default {
   border-right: 1px solid #c3c3c3;
 }
 
+.second-row-position {
+  position: relative;
+}
+.icon-btn {
+  position: absolute;
+  background: #f5f6f8;
+  width: 22px;
+  height: 22px;
+  bottom: 0;
+  right: 0;
+  transform: translateY(-50%) translateX(50%);
+  z-index: 9999;
+  border-radius: 50%;
+  border: 1px solid #c3c3c3;
+}
 .no-item {
   background: #fff;
 }

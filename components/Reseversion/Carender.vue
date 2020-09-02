@@ -47,6 +47,7 @@ export default {
       this.dateItem.day = data.getDate()
     },
     setRaiosData(data) {
+      console.log('落ちました', data)
       this.raiosData = data
     },
     setCarendarActiveList(data) {

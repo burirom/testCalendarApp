@@ -24,27 +24,24 @@ export default {
       type: Number,
       default: 0,
     },
+    boxPlaceY: {
+      type: Number,
+      default: 0,
+    },
     business: {
+      type: Array,
       default: null,
     },
   },
   data() {
-    return {
-      customerInfo: {
-        start: new Date(2020, 8, 31, 10, 0),
-        end: new Date(2020, 8, 31, 13, 0),
-        name: '野村',
-        customerNumberOfPeople: 0,
-        nomination: false,
-      },
-    }
+    return {}
   },
   computed: {
     boxStyles() {
       return {
         '---height': this.calcBoxheight(this.intDiffMinute) + 'px',
         '---boxPlaceX': this.calcBoxPlaceX() + 'px',
-        '---boxPlaceY': this.calcBoxPlaceY() + 'px',
+        '---boxPlaceY': this.boxPlaceY + 'px',
       }
     },
     boxPlace() {

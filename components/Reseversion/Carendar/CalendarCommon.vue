@@ -45,17 +45,21 @@
         <slot name="firstColContent"></slot>
         <CalendarTimeCol :times="timesText" :timedisplay="true" />
       </div>
-      <div class="d-flex second-row-position">
-        <slot name="reservationBox" />
+      <draggable
+        :options="{ handle: '.item-handle' }"
+        class="d-flex second-row-position"
+      >
+        <slot name="reservationBox" class="item-handle" />
         <div
           v-for="n of numCol"
           :key="n"
           class="d-flex border-right col-width"
           :style="numWidth"
         >
+          <!-- <slot name="reservationBox" /> -->
           <slot name="timeCol"></slot>
         </div>
-      </div>
+      </draggable>
 
       <div class="calender-last-col" :style="lastColWidth">
         <CalendarTimeCol :times="timesText" />
@@ -65,7 +69,11 @@
 </template>
 
 <script>
+import draggable from 'vuedraggable'
 export default {
+  components: {
+    draggable,
+  },
   props: {
     topRowContents: {
       type: Array,
@@ -89,7 +97,7 @@ export default {
     },
   },
   data: () => ({
-    dorpdownList: ['All', 'test1', 'test2'],
+    coldata: {},
   }),
   computed: {
     lastColWidth() {

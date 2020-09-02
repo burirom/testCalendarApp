@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "nuxt": "^2.14.0",
+    "vue-moveable": "^1.8.9",
     "vuedraggable": "^2.24.1"
   },
   "devDependencies": {

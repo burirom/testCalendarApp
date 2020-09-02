@@ -6,26 +6,27 @@
       :times-text="times"
     >
       <template #reservationBox>
-        <div
-          v-for="(customerList, index) in customerLists"
-          :key="`first-${index}`"
-        >
-          <ReservationBox
-            v-if="DateComparison(dateItem, customerList.start)"
-            :row-width="100"
-            :business="Business"
-            :customerinfo="customerList"
-            :box-place-x="
-              calcReservationBoxPlaceX(
-                customerList.PersonInChargeId,
-                personInChargeLists
-              )
-            "
-            :box-place-y="
-              calcReservationBoxPlaceY(Business.openDate, customerList.start)
-            "
-          />
-        </div>
+        <draggable>
+          <div
+            v-for="(customerList, index) in customerLists"
+            :key="`first-${index}`"
+          >
+            <ReservationBox
+              v-if="DateComparison(dateItem, customerList.start)"
+              :row-width="100"
+              :customer-info="customerList"
+              :box-place-x="
+                calcReservationBoxPlaceX(
+                  customerList.PersonInChargeId,
+                  personInChargeLists
+                )
+              "
+              :box-place-y="
+                calcReservationBoxPlaceY(Business.openDate, customerList.start)
+              "
+            />
+          </div>
+        </draggable>
       </template>
       <template #secondrow>
         <p class="ma-0 second-row-text">ユニット表示</p>
@@ -73,7 +74,11 @@
   </div>
 </template>
 <script>
+import draggable from 'vuedraggable'
 export default {
+  components: {
+    draggable,
+  },
   props: {
     dateItem: {
       default: null,

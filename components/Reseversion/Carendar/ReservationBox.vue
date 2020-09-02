@@ -28,8 +28,8 @@ export default {
       type: Number,
       default: 0,
     },
-    business: {
-      type: Array,
+    customerInfo: {
+      type: Object,
       default: null,
     },
   },
@@ -92,13 +92,6 @@ export default {
     },
     calcBoxPlaceX() {
       return this.boxPlaceX * this.rowWidth
-    },
-    calcBoxPlaceY() {
-      const boxPlace = this.calcDiffTime(
-        this.business.openDate,
-        this.customerInfo.start
-      )
-      return Math.round(boxPlace / 10) * 20 + 107
     },
   },
 }

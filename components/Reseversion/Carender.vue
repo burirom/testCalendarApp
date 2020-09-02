@@ -6,35 +6,45 @@
         @sendRaiosData="setRaiosData"
         @sendCarendarList="setCarendarActiveList"
       />
-      <CarendarDayContent />
-      <!-- <CarendarWeekContent /> -->
+
+      <CalendarDayContent
+        v-if="activeCarendarList === 0"
+        :date-item="dateItem"
+        :radios="raiosData === 'unit' ? true : false"
+      />
+      <CalendarWeekContent
+        v-else-if="activeCarendarList === 1"
+        :radios="raiosData === 'unit' ? true : false"
+      />
+      <CalendarHalfMonthContent
+        v-else-if="activeCarendarList === 2"
+        :radios="raiosData === 'unit' ? true : false"
+      />
     </v-card>
   </div>
 </template>
-
 <script>
 export default {
-  data() {
-    return {
-      date: new Date(),
-      raiosData: 'unit',
-      activeCarendarList: 0,
-      damyData: [
-        {
-          title: 'ミーティング',
-          start: new Date(),
-          end: '2019-09-12T11:30:00',
-          extendedProps: {
-            department: '総務部',
-          },
-          description: '総務部とのミーティング',
-        },
-      ],
-    }
+  data: () => ({
+    date: new Date(),
+    dateItem: {
+      year: null,
+      month: null,
+      day: null,
+    },
+    raiosData: 'unit',
+    activeCarendarList: 0,
+  }),
+  computed: {
+    testDate() {
+      return this.date
+    },
   },
   methods: {
-    setDate(date) {
-      this.date = date
+    setDate(data) {
+      this.dateItem.year = data.getFullYear()
+      this.dateItem.month = data.getMonth() + 1
+      this.dateItem.day = data.getDate()
     },
     setRaiosData(data) {
       this.raiosData = data
@@ -45,5 +55,3 @@ export default {
   },
 }
 </script>
-
-<style></style>

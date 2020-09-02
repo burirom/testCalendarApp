@@ -61,11 +61,17 @@ export default {
       required: false,
       default: false,
     },
+    colwidth: {
+      type: Number,
+      required: false,
+      default: 100,
+    },
   },
   computed: {
     numCol() {
       return {
-        '---width': 150 / this.personcharges.length + 'px',
+        '---width':
+          'calc(' + this.colwidth + 'px / ' + this.personcharges.length + ')',
       }
     },
     isPersoncharges() {

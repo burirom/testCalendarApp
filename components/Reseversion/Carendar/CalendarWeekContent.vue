@@ -209,14 +209,7 @@ export default {
 .calender-last-col {
   width: var(---width);
 }
-.carendar-first-row {
-  height: 62px;
-  border-bottom: 1px solid #c3c3c3;
-  background: #f5f6f8;
-  &:first-child {
-    border-top: 1px solid #c3c3c3;
-  }
-}
+
 .carendar-second-row {
   height: 45px;
   border-bottom: 1px solid #c3c3c3;

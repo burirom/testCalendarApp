@@ -57,19 +57,19 @@
       :top-row-contents="PersonInChargeLists"
       :times-text="times"
     >
-      <template #secondRow>
+      <template #firstrow>
+        <div>ユーザー表示</div>
+      </template>
+
+      <template #secondrow>
         <p class="ma-0 second-row-text">ユニット表示</p>
       </template>
       <template #timeCol>
         <CalendarTimeCol :times="times" />
       </template>
     </CalendarCommon>
-    <CalendarCommon
-      v-else-if="radios"
-      :top-row-contents="unitLists"
-      :times-text="times"
-    >
-      <template #secondRow>
+    <!-- <CalendarCommon v-else-if="radios" :times-text="times">
+      <template #firstrow>
         <div
           v-for="(PersonInChargeList,
           PersonInChargeIndex) in PersonInChargeLists"
@@ -85,7 +85,7 @@
       <template #timeCol>
         <CalendarTimeCol :personcharges="PersonInChargeLists" :times="times" />
       </template>
-    </CalendarCommon>
+    </CalendarCommon> -->
   </div>
 </template>
 <script>
@@ -227,7 +227,7 @@ export default {
   },
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .carendar-box {
   overflow: auto;
 }
